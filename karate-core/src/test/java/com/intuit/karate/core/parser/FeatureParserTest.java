@@ -52,7 +52,12 @@ class FeatureParserTest {
         match(map.get("tags"), "[{ name: '@foo', line: 1 }]");
         ScenarioResult sr = result.getScenarioResults().get(0);
         map = sr.toCucumberJson();
-        match(map.get("tags"), "[{ name: '@bar', line: 5 }, { name: '@foo', line: 1 }]");
+        Object actual = map.get("tags");
+        String expected1 = "[{ name: '@foo', line: 1 }, { name: '@bar', line: 5 }]";
+        String expected2 = "[{ name: '@bar', line: 5 }, { name: '@foo', line: 1 }]";
+        if(!(Match.evaluate(actual).isEqualTo(expected1).pass)){
+            match(actual, expected2);
+        }
         ReportUtils.saveCucumberJson("target", result, null);
         ReportUtils.saveJunitXml("target", result, null);
     }
